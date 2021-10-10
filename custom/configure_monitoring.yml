@@ -1,0 +1,54 @@
+- name: Install python dependencies
+  package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - python3
+    - python3-pip
+    - python3-setuptools
+  tags:
+    - setup-monitoring
+
+- name: Make sure docker python module is installed
+  pip:
+    name: "docker, docker-compose"
+  tags:
+    - setup-monitoring
+
+- name: Create the needed directory structure
+  file:
+    path: "{{ workdir }}"
+    state: directory
+    mode: 0600
+  changed_when: false
+  tags:
+    - setup-monitoring
+
+- name: Copy docker-compose
+  template:
+    src: custom/files/docker-compose.yml
+    dest: "{{ workdir }}/docker-compose.yml"
+  tags:
+    - setup-monitoring
+
+- name: Create the directory structure for Prometheus
+  file:
+    path: "{{ workdir }}/.prometheus"
+    state: directory
+  tags:
+    - setup-monitoring
+
+- name: Copy the prometheus config
+  template:
+    src: "custom/files/prometheus.yml"
+    dest: "{{ workdir }}/.prometheus/prometheus.yml"
+  tags:
+    - setup-monitoring
+
+- name: Upgrade the containers and run `docker-compose up`
+  community.general.docker_compose:
+    project_src: "{{ workdir }}"
+    pull: true
+    remove_orphans: true
+  tags:
+    - setup-monitoring
