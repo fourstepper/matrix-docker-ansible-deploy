@@ -61,6 +61,7 @@
   post_tasks:
     - include_tasks: custom/configure_monitoring.yml
       tags:
+        - setup-all
         - setup-monitoring
       vars:
         workdir: "/deploy/root"
