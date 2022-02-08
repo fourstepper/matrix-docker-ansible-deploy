@@ -1,3 +1,86 @@
+# 2022-02-01
+
+## matrix-hookshot bridging support
+
+Thanks to [HarHarLinks](https://github.com/HarHarLinks), the playbook can now install the [matrix-hookshot](https://github.com/Half-Shot/matrix-hookshot) bridge for bridging Matrix to multiple project management services, such as GitHub, GitLab and JIRA.
+See our [Setting up matrix-hookshot](docs/configuring-playbook-bridge-hookshot.md) documentation to get started.
+
+
+# 2022-01-31
+
+## ARM support for matrix-corporal
+
+[matrix-corporal](https://github.com/devture/matrix-corporal) (as of version `2.2.3`) is now published to Docker Hub (see [devture/matrix-corporal](https://hub.docker.com/r/devture/matrix-corporal)) as a multi-arch container image with support for all these platforms: `linux/amd64`, `linux/arm64/v8` and `linux/arm/v7`. The playbook no longer resorts to self-building matrix-corporal on these ARM architectures.
+
+
+# 2022-01-07
+
+## Dendrite support
+
+**TLDR**: We now have optional experimental [Dendrite](https://github.com/matrix-org/dendrite) homeserver support for new installations. **Existing (Synapse) installations need to be updated**, because some internals changed. See [Adapting the configuration for existing Synapse installations](#adapting-the-configuration-for-existing-synapse-installations).
+
+[Jip J. Dekker](https://github.com/Dekker1) did the [initial work](https://github.com/spantaleev/matrix-docker-ansible-deploy/pull/818) of adding [Dendrite](https://github.com/matrix-org/dendrite) support to the playbook back in January 2021. Lots of work (and time) later, Dendrite support is finally ready for testing.
+
+We believe that 2022 will be the year of the non-Synapse Matrix server!
+
+The playbook was previously quite [Synapse](https://github.com/matrix-org/synapse)-centric, but can now accommodate multiple homeserver implementations. Only one homeserver implementation can be active (installed) at a given time.
+
+**Synapse is still the default homeserver implementation** installed by the playbook. A new variable (`matrix_homeserver_implementation`) controls which server implementation is enabled (`synapse` or `dendrite` at the given moment).
+
+### Adapting the configuration for existing Synapse installations
+
+Because the playbook is not so Synapse-centric anymore, a small configuration change is necessary for existing installations to bring them up to date.
+
+The `vars.yml` file for **existing installations will need to be updated** by adding this **additional configuration**:
+
+```yaml
+# All secrets keys are now derived from `matrix_homeserver_generic_secret_key`, not from `matrix_synapse_macaroon_secret_key`.
+# To keep them all the same, define `matrix_homeserver_generic_secret_key` in terms of `matrix_synapse_macaroon_secret_key`.
+# Using a new secret value for this configuration key is also possible and should not cause any problems.
+#
+# Fun fact: new installations (based on the new `examples/vars.yml` file) do this in reverse.
+# That is, the Synapse macaroon secret is derived from `matrix_homeserver_generic_secret_key`.
+matrix_homeserver_generic_secret_key: "{{ matrix_synapse_macaroon_secret_key }}"
+```
+
+### Trying out Dendrite
+
+Finally, **to try out Dendrite**, we recommend that you **use a new server** and the following addition to your `vars.yml` configuration:
+
+```yaml
+matrix_homeserver_implementation: dendrite
+```
+
+**The homeserver implementation of an existing server cannot be changed** (e.g. from Synapse to Dendrite) without data loss.
+
+We're excited to gain support for other homeserver implementations, like [Conduit](https://conduit.rs/), etc!
+
+
+## Honoroit bot support
+
+Thanks to [Aine](https://gitlab.com/etke.cc) of [etke.cc](https://etke.cc/), the playbook can now help you set up [Honoroit](https://gitlab.com/etke.cc/honoroit) - a helpdesk bot.
+
+See our [Setting up Honoroit](docs/configuring-playbook-bot-honoroit.md) documentation to get started.
+
+
+# 2022-01-06
+
+## Cinny support
+
+Thanks to [Aine](https://gitlab.com/etke.cc) of [etke.cc](https://etke.cc/), the playbook now supports [Cinny](https://cinny.in/) - a new simple, elegant and secure Matrix client.
+
+By default, we still install Element. Still, people who'd like to try Cinny out can now install it via the playbook.
+
+Additional details are available in [Setting up Cinny](docs/configuring-playbook-client-cinny.md).
+
+
+# 2021-12-22
+
+## Twitter bridging support via mautrix-twitter
+
+Thanks to [Matthew Cengia](https://github.com/mattcen) and [Shreyas Ajjarapu](https://github.com/shreyasajj), besides [mx-puppet-twitter](docs/configuring-playbook-bridge-mx-puppet-twitter.md), bridging to [Twitter](https://twitter.com/) can now also happen with [mautrix-twitter](docs/configuring-playbook-bridge-mautrix-twitter.md).
+
+
 # 2021-12-14
 
 ## (Security) Users of the Signal bridge may wish to upgrade it to work around log4j vulnerability
