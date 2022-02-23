@@ -9,7 +9,7 @@ matrix_synapse_container_image_self_build_repo: "https://github.com/matrix-org/s
 
 matrix_synapse_docker_image: "{{ matrix_synapse_docker_image_name_prefix }}matrixdotorg/synapse:{{ matrix_synapse_docker_image_tag }}"
 matrix_synapse_docker_image_name_prefix: "{{ 'localhost/' if matrix_synapse_container_image_self_build else matrix_container_global_registry_prefix }}"
-matrix_synapse_version: v1.52.0
+matrix_synapse_version: v1.53.0
 matrix_synapse_docker_image_tag: "{{ matrix_synapse_version }}"
 matrix_synapse_docker_image_force_pull: "{{ matrix_synapse_docker_image.endswith(':latest') }}"
 
@@ -497,7 +497,7 @@ matrix_synapse_ext_password_provider_shared_secret_auth_com_devture_shared_secre
 matrix_synapse_ext_password_provider_shared_secret_config: "{{ matrix_synapse_ext_password_provider_shared_secret_config_yaml|from_yaml }}"
 matrix_synapse_ext_password_provider_shared_secret_config_yaml: |
   shared_secret: {{ matrix_synapse_ext_password_provider_shared_secret_auth_shared_secret|string|to_json }}
-  m_login_password_support_enabled: {{ matrix_synapse_ext_password_provider_shared_secret_auth_m_login_password_support_enabled|bool|to_json }}
+  m_login_password_support_enabled: {{ matrix_synapse_ext_password_provider_shared_secret_auth_m_login_password_support_enabled|to_json }}
   com_devture_shared_secret_auth_support_enabled: {{ matrix_synapse_ext_password_provider_shared_secret_auth_com_devture_shared_secret_auth_support_enabled|to_json }}
 
 # Enable this to activate LDAP password provider
@@ -542,6 +542,30 @@ matrix_synapse_ext_spam_checker_mjolnir_antispam_config_block_usernames: false
 matrix_synapse_ext_spam_checker_mjolnir_antispam_config_ban_lists: []
 
 
+# Enable this to activate the E2EE disabling Synapse module.
+# See: https://github.com/digitalentity/matrix_encryption_disabler
+matrix_synapse_ext_encryption_disabler_enabled: false
+matrix_synapse_ext_encryption_disabler_download_url: "https://raw.githubusercontent.com/digitalentity/matrix_encryption_disabler/1182388f7019e8ec1e28f035070c7919d0e4cc24/matrix_e2ee_filter.py"
+# A list of server domain names for which to deny encryption if the event sender's domain matches the domain in the list.
+# By default, with the configuration below, we prevent all homeserver users from initiating encryption in ANY room.
+matrix_synapse_ext_encryption_disabler_deny_encryption_for_users_of: ["{{ matrix_domain }}"]
+# A list of server domain names for which to deny encryption if the destination room id's domain matches the domain in the list.
+# By default, with the configuration below, we prevent locally-created encryption events by ANY user encrypt rooms on the homeserver.
+# Note: foreign users with enough room privileges will still be able to send an encryption event to your rooms and encrypt them.
+matrix_synapse_ext_encryption_disabler_deny_encryption_for_rooms_of: ["{{ matrix_domain }}"]
+# Specifies whether the power levels event (setting) provided during room creation should be patched.
+# This makes it impossible for anybody (locally or over federation) from enabling room encryption
+# for the lifetime of rooms created while this setting is enabled (irreversible).
+# Enabling this may have incompatiblity consequences with servers / clients.
+# Familiarize yourself with the caveats upstream: https://github.com/digitalentity/matrix_encryption_disabler
+matrix_synapse_ext_encryption_disabler_patch_power_levels: false
+matrix_synapse_ext_encryption_config: "{{ matrix_synapse_ext_encryption_config_yaml|from_yaml }}"
+matrix_synapse_ext_encryption_config_yaml: |
+  deny_encryption_for_users_of: {{ matrix_synapse_ext_encryption_disabler_deny_encryption_for_users_of|to_json }}
+  deny_encryption_for_rooms_of: {{ matrix_synapse_ext_encryption_disabler_deny_encryption_for_rooms_of|to_json }}
+  patch_power_levels: {{ matrix_synapse_ext_encryption_disabler_patch_power_levels|to_json }}
+
+
 matrix_s3_media_store_enabled: false
 matrix_s3_media_store_custom_endpoint_enabled: false
 matrix_s3_goofys_docker_image: "ewoutp/goofys:latest"
@@ -573,7 +597,7 @@ matrix_synapse_room_list_publication_rules:
     room_id: "*"
     action: allow
 
-matrix_synapse_default_room_version: "6"
+matrix_synapse_default_room_version: "9"
 
 # Controls the Synapse `spam_checker` setting.
 #
