@@ -671,6 +671,8 @@ matrix_heisenbridge_systemd_wanted_services_list: |
 # We don't enable bridges by default.
 matrix_hookshot_enabled: false
 
+matrix_hookshot_container_image_self_build: "{{ matrix_architecture not in ['amd64'] }}"
+
 matrix_hookshot_appservice_token: "{{ '%s' | format(matrix_homeserver_generic_secret_key) | password_hash('sha512', 'hookshot.as.tok') | to_uuid }}"
 
 matrix_hookshot_homeserver_token: "{{ '%s' | format(matrix_homeserver_generic_secret_key) | password_hash('sha512', 'hookshot.hs.tok') | to_uuid }}"
@@ -908,7 +910,7 @@ matrix_mx_puppet_discord_database_password: "{{ '%s' | format(matrix_homeserver_
 # We don't enable bridges by default.
 matrix_mx_puppet_steam_enabled: false
 
-matrix_mx_puppet_steam_container_image_self_build: "{{ matrix_architecture != 'amd64' }}"
+matrix_mx_puppet_steam_container_image_self_build: "{{ matrix_architecture not in ['arm64', 'amd64'] }}"
 
 matrix_mx_puppet_steam_systemd_required_services_list: |
   {{
@@ -1093,6 +1095,27 @@ matrix_bot_mjolnir_systemd_required_services_list: |
 #
 ######################################################################
 
+######################################################################
+#
+# matrix-backup-borg
+#
+######################################################################
+
+matrix_backup_borg_enabled: false
+matrix_backup_borg_location_source_directories:
+  - "{{ matrix_base_data_path }}"
+matrix_backup_borg_location_exclude_patterns: |
+  {{
+    {
+      'synapse': ["{{ matrix_synapse_media_store_path }}/local_thumbnails", "{{ matrix_synapse_media_store_path }}/remote_thumbnail", "{{ matrix_synapse_media_store_path }}/url_cache", "{{ matrix_synapse_media_store_path }}/url_cache_thumbnails"],
+    }[matrix_homeserver_implementation]
+  }}
+
+######################################################################
+#
+# /matrix-backup-borg
+#
+######################################################################
 
 ######################################################################
 #
@@ -1592,15 +1615,11 @@ matrix_postgres_additional_databases: |
     }] if (matrix_synapse_enabled and matrix_synapse_database_database != matrix_postgres_db_name and matrix_synapse_database_host == 'matrix-postgres') else [])
     +
     ([{
-      'name': matrix_dendrite_naffka_database,
-      'username': matrix_dendrite_database_user,
-      'password': matrix_dendrite_database_password,
-    },{
       'name': matrix_dendrite_appservice_database,
       'username': matrix_dendrite_database_user,
       'password': matrix_dendrite_database_password,
     },{
-      'name': matrix_dendrite_federationsender_database,
+      'name': matrix_dendrite_federationapi_database,
       'username': matrix_dendrite_database_user,
       'password': matrix_dendrite_database_password,
     },{
@@ -1616,19 +1635,15 @@ matrix_postgres_additional_databases: |
       'username': matrix_dendrite_database_user,
       'password': matrix_dendrite_database_password,
     },{
-      'name': matrix_dendrite_singingkeyserver_database,
-      'username': matrix_dendrite_database_user,
-      'password': matrix_dendrite_database_password,
-    },{
       'name': matrix_dendrite_syncapi_database,
       'username': matrix_dendrite_database_user,
       'password': matrix_dendrite_database_password,
     },{
-      'name': matrix_dendrite_account_database,
+      'name': matrix_dendrite_userapi_database,
       'username': matrix_dendrite_database_user,
       'password': matrix_dendrite_database_password,
     },{
-      'name': matrix_dendrite_device_database,
+      'name': matrix_dendrite_pushserver_database,
       'username': matrix_dendrite_database_user,
       'password': matrix_dendrite_database_password,
     },{
