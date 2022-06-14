@@ -352,9 +352,6 @@ worker_app: synapse.app.homeserver
 
 # thx https://oznetnerd.com/2017/04/18/jinja2-selectattr-filter/
 # reduce the main worker's offerings to core homeserver business
-{% if matrix_synapse_workers_enabled_list|selectattr('type', 'equalto', 'appservice')|list  %}
-notify_appservices: false
-{% endif %}
 {% if matrix_synapse_workers_enabled_list|selectattr('type', 'equalto', 'federation_sender')|list  %}
 send_federation: false
 {% endif %}
@@ -363,9 +360,6 @@ enable_media_repo: false
 {% endif %}
 {% if matrix_synapse_workers_enabled_list|selectattr('type', 'equalto', 'pusher')|list  %}
 start_pushers: false
-{% endif %}
-{% if matrix_synapse_workers_enabled_list|selectattr('type', 'equalto', 'user_dir')|list  %}
-update_user_directory: false
 {% endif %}
 
 daemonize: false
@@ -2532,8 +2526,10 @@ password_providers:
         uid: {{ matrix_synapse_ext_password_provider_ldap_attributes_uid|string|to_json }}
         mail: {{ matrix_synapse_ext_password_provider_ldap_attributes_mail|string|to_json }}
         name: {{ matrix_synapse_ext_password_provider_ldap_attributes_name|string|to_json }}
+{% if matrix_synapse_ext_password_provider_ldap_bind_dn %}
       bind_dn: {{ matrix_synapse_ext_password_provider_ldap_bind_dn|string|to_json }}
       bind_password: {{ matrix_synapse_ext_password_provider_ldap_bind_password|string|to_json }}
+{% endif %}
       filter: {{ matrix_synapse_ext_password_provider_ldap_filter|string|to_json }}
 {% endif %}
 {% endif %}
