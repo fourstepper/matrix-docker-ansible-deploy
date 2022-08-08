@@ -47,6 +47,8 @@ Using this playbook, you can get the following services configured on your serve
 
 - (optional, advanced) the [Matrix Corporal](https://github.com/devture/matrix-corporal) reconciliator and gateway for a managed Matrix server
 
+- (optional) the [mautrix-discord](https://github.com/mautrix/discord) bridge for bridging your Matrix server to [Discord](https://discord.com/) - see [docs/configuring-playbook-bridge-mautrix-discord.md](docs/configuring-playbook-bridge-mautrix-discord.md) for setup documentation
+
 - (optional) the [mautrix-telegram](https://github.com/mautrix/telegram) bridge for bridging your Matrix server to [Telegram](https://telegram.org/)
 
 - (optional) the [mautrix-whatsapp](https://github.com/mautrix/whatsapp) bridge for bridging your Matrix server to [WhatsApp](https://www.whatsapp.com/)
@@ -89,7 +91,7 @@ Using this playbook, you can get the following services configured on your serve
 
 - (optional) the [mx-puppet-discord](https://github.com/matrix-discord/mx-puppet-discord) bridge for [Discord](https://discordapp.com/) - see [docs/configuring-playbook-bridge-mx-puppet-discord.md](docs/configuring-playbook-bridge-mx-puppet-discord.md) for setup documentation
 
-- (optional) the [mx-puppet-groupme](https://gitlab.com/robintown/mx-puppet-groupme) bridge for [GroupMe](https://groupme.com/) - see [docs/configuring-playbook-bridge-mx-puppet-groupme.md](docs/configuring-playbook-bridge-mx-puppet-groupme.md) for setup documentation
+- (optional) the [mx-puppet-groupme](https://gitlab.com/xangelix-pub/matrix/mx-puppet-groupme) bridge for [GroupMe](https://groupme.com/) - see [docs/configuring-playbook-bridge-mx-puppet-groupme.md](docs/configuring-playbook-bridge-mx-puppet-groupme.md) for setup documentation
 
 - (optional) the [mx-puppet-steam](https://github.com/icewind1991/mx-puppet-steam) bridge for [Steam](https://steamapp.com/) - see [docs/configuring-playbook-bridge-mx-puppet-steam.md](docs/configuring-playbook-bridge-mx-puppet-steam.md) for setup documentation
 
@@ -102,6 +104,10 @@ Using this playbook, you can get the following services configured on your serve
 - (optional) [Jitsi](https://jitsi.org/), an open source video-conferencing platform - see [docs/configuring-playbook-jitsi.md](docs/configuring-playbook-jitsi.md) for setup documentation
 
 - (optional) [matrix-reminder-bot](https://github.com/anoadragon453/matrix-reminder-bot) for scheduling one-off & recurring reminders and alarms - see [docs/configuring-playbook-bot-matrix-reminder-bot.md](docs/configuring-playbook-bot-matrix-reminder-bot.md) for setup documentation
+
+- (optional) [matrix-registration-bot](https://github.com/moan0s/matrix-registration-bot) for invitations by creating and managing registration tokens  - see [docs/configuring-playbook-bot-matrix-registration-bot.md](docs/configuring-playbook-bot-matrix-registration-bot.md) for setup documentation
+
+- (optional) [maubot](https://github.com/maubot/maubot) a plugin-based Matrix bot system - see [docs/configuring-playbook-bot-maubot.md](docs/configuring-playbook-bot-maubot.md) for setup documentation
 
 - (optional) [honoroit](https://gitlab.com/etke.cc/honoroit) helpdesk bot - see [docs/configuring-playbook-bot-honoroit.md](docs/configuring-playbook-bot-honoroit.md) for setup documentation
 
