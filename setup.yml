@@ -43,10 +43,12 @@
     - matrix-bot-maubot
     - matrix-bot-buscarron
     - matrix-bot-honoroit
+    - matrix-bot-postmoogle
     - matrix-bot-go-neb
     - matrix-bot-mjolnir
     - matrix-synapse
     - matrix-dendrite
+    - matrix-conduit
     - matrix-synapse-admin
     - matrix-prometheus-node-exporter
     - matrix-prometheus-postgres-exporter
